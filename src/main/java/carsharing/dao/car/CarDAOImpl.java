@@ -37,7 +37,7 @@ public class CarDAOImpl implements CarDAO {
      */
     @Override
     public boolean dropCarTable() {
-        try (Connection connection = this.factory.getConnection();
+        try (Connection connection = factory.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(DROP_CAR_SQL);
             return true;
@@ -56,7 +56,7 @@ public class CarDAOImpl implements CarDAO {
      */
     @Override
     public boolean createCarTable() {
-        try (Connection connection = this.factory.getConnection();
+        try (Connection connection = factory.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(CREATE_CAR_TABLE_SQL);
             return true;
@@ -80,7 +80,7 @@ public class CarDAOImpl implements CarDAO {
              PreparedStatement statement = connection.prepareStatement(sql);) {
             statement.setInt(1, companyId);
             ResultSet rs = statement.executeQuery();
-            ArrayList<Car> cars = new ArrayList<Car>();
+            ArrayList<Car> cars = new ArrayList<>();
             while (rs.next()) {
                 Car car = new Car(rs.getInt("id"), rs.getString("name"));
                 cars.add(car);
@@ -105,7 +105,7 @@ public class CarDAOImpl implements CarDAO {
             throw new IllegalArgumentException("Car name is null or empty");
         }
 
-        try (Connection connection = this.factory.getConnection();
+        try (Connection connection = factory.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_CAR_SQL)) {
             statement.setString(1, carName);
             statement.setInt(2, companyId);

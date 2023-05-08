@@ -40,7 +40,7 @@ public class CompanyDAOImpl implements CompanyDAO {
      */
     @Override
     public boolean dropCompanyTable() {
-        try (Connection connection = this.factory.getConnection();
+        try (Connection connection = factory.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate("ALTER TABLE CAR DROP CONSTRAINT FK_COMPANY");
             statement.executeUpdate(DROP_COMPANY_SQL);
@@ -59,7 +59,7 @@ public class CompanyDAOImpl implements CompanyDAO {
      */
     @Override
     public boolean createCompanyTable() {
-        try (Connection connection = this.factory.getConnection();
+        try (Connection connection = factory.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(CREATE_COMPANY_TABLE_SQL);
             return true;
@@ -76,10 +76,10 @@ public class CompanyDAOImpl implements CompanyDAO {
     @Override
     public ArrayList<Company> getAllCompanies() {
         String sql = "SELECT * FROM COMPANY ORDER BY id";
-        try (Connection connection = this.factory.getConnection();
+        try (Connection connection = factory.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
-            ArrayList<Company> companies = new ArrayList<Company>();
+            ArrayList<Company> companies = new ArrayList<>();
             while (rs.next()) {
                 Company company = new Company(rs.getInt("id"), rs.getString("name"));
                 companies.add(company);
@@ -103,7 +103,7 @@ public class CompanyDAOImpl implements CompanyDAO {
             throw new IllegalArgumentException("Company name is null or empty");
         }
 
-        try (Connection connection = this.factory.getConnection();
+        try (Connection connection = factory.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_COMPANY_SQL)) {
             statement.setString(1, name);
             int affectedRows = statement.executeUpdate();
