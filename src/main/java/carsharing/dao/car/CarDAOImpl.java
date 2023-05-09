@@ -39,6 +39,7 @@ public class CarDAOImpl implements CarDAO {
     public boolean dropCarTable() {
         try (Connection connection = factory.getConnection();
              Statement statement = connection.createStatement()) {
+            statement.executeUpdate("ALTER TABLE CUSTOMER DROP CONSTRAINT fk_car");
             statement.executeUpdate(DROP_CAR_SQL);
             return true;
         } catch (SQLException e) {
@@ -76,6 +77,26 @@ public class CarDAOImpl implements CarDAO {
     @Override
     public ArrayList<Car> getCarsByCompanyId(Integer companyId) {
         String sql = "SELECT * FROM CAR WHERE company_id = ? ORDER BY id";
+        try (Connection connection = factory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);) {
+            statement.setInt(1, companyId);
+            ResultSet rs = statement.executeQuery();
+            ArrayList<Car> cars = new ArrayList<>();
+            while (rs.next()) {
+                Car car = new Car(rs.getInt("id"), rs.getString("name"));
+                cars.add(car);
+            }
+            return cars;
+        } catch (SQLException se) {
+            se.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public ArrayList<Car> getNotRentedCarsByCompanyId(Integer companyId) {
+        String sql = "SELECT * FROM CAR WHERE company_id = ? AND id NOT IN (SELECT rented_car_id FROM CUSTOMER WHERE rented_car_id IS NOT NULL)";
+
         try (Connection connection = factory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);) {
             statement.setInt(1, companyId);

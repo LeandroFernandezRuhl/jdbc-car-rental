@@ -1,7 +1,8 @@
-package carsharing;
+package carsharing.menu;
 
 import carsharing.dao.car.CarDAO;
 import carsharing.dao.company.CompanyDAO;
+import carsharing.dao.customer.CustomerDAO;
 import carsharing.model.Car;
 import carsharing.model.Company;
 
@@ -9,46 +10,31 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class CarRentalMenu {
+public class ManagerMenu {
     Scanner scanner;
     CompanyDAO companyDAO;
     CarDAO carDAO;
-    String companyMenu = """
+    CustomerDAO customerDAO;
+
+    private final String companyMenu = """
                     1. Company list
                     2. Create a company
                     0. Back
                     """;
-    String companyCarsMenu = """
+    private final String companyCarsMenu = """
             1. Car list
             2. Create a car
             0. Back
             """;
 
-    public CarRentalMenu(Scanner scanner, CompanyDAO companyDAO, CarDAO carDAO) {
+    public ManagerMenu(Scanner scanner, CompanyDAO companyDAO, CarDAO carDAO, CustomerDAO customerDAO) {
         this.scanner = scanner;
         this.companyDAO = companyDAO;
         this.carDAO = carDAO;
+        this.customerDAO = customerDAO;
     }
 
-    public void runMenu() {
-        boolean running = true;
-        while (running) {
-            System.out.println("""
-                    1. Log in as a manager
-                    0. Exit
-                    """);
-            String option = scanner.nextLine();
-            if (option.equals("1")) {
-                runCompanyMenu();
-            } else if (option.equals("0")) {
-                running = false;
-            } else {
-                System.out.println("Invalid option!");
-            }
-        }
-    }
-
-    private void runCompanyMenu() {
+    protected void runCompanyMenu() {
         boolean running = true;
         while (running) {
             System.out.println(companyMenu);

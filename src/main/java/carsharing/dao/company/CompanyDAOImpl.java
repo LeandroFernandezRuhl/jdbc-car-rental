@@ -40,9 +40,9 @@ public class CompanyDAOImpl implements CompanyDAO {
      */
     @Override
     public boolean dropCompanyTable() {
-        try (Connection connection = factory.getConnection();
+        try (Connection connection = this.factory.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate("ALTER TABLE CAR DROP CONSTRAINT FK_COMPANY");
+            statement.executeUpdate("ALTER TABLE CAR DROP CONSTRAINT fk_company");
             statement.executeUpdate(DROP_COMPANY_SQL);
             return true;
         } catch (SQLException e) {
@@ -59,7 +59,7 @@ public class CompanyDAOImpl implements CompanyDAO {
      */
     @Override
     public boolean createCompanyTable() {
-        try (Connection connection = factory.getConnection();
+        try (Connection connection = this.factory.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(CREATE_COMPANY_TABLE_SQL);
             return true;
@@ -76,10 +76,10 @@ public class CompanyDAOImpl implements CompanyDAO {
     @Override
     public ArrayList<Company> getAllCompanies() {
         String sql = "SELECT * FROM COMPANY ORDER BY id";
-        try (Connection connection = factory.getConnection();
+        try (Connection connection = this.factory.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
-            ArrayList<Company> companies = new ArrayList<>();
+            ArrayList<Company> companies = new ArrayList<Company>();
             while (rs.next()) {
                 Company company = new Company(rs.getInt("id"), rs.getString("name"));
                 companies.add(company);
@@ -103,7 +103,7 @@ public class CompanyDAOImpl implements CompanyDAO {
             throw new IllegalArgumentException("Company name is null or empty");
         }
 
-        try (Connection connection = factory.getConnection();
+        try (Connection connection = this.factory.getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_COMPANY_SQL)) {
             statement.setString(1, name);
             int affectedRows = statement.executeUpdate();

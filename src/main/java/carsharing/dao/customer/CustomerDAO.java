@@ -12,5 +12,6 @@ public interface CustomerDAO {
     boolean rentCar(Integer customerId, Integer carId);
     boolean returnCar(Integer customerId);
     boolean hasRentedCar(Integer customerId);
+    ArrayList<String> getRentedCarInfo(Integer customerId);
 
 }
